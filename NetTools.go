@@ -1,6 +1,7 @@
 package gaw
 
 import (
+	"io/ioutil"
 	"net/http"
 	"strings"
 )
@@ -44,4 +45,22 @@ func GetIPFromHTTPrequest(r *http.Request) string {
 
 func inPortValid(port int) bool {
 	return port > 0 && port < 65535
+}
+
+// GetHTMLFromURL returns the whole Body of the given website by doing a simple GET request
+func GetHTMLFromURL(url string) (string, error) {
+	resp, err := http.Get(url)
+	// handle the error if there is one
+	if err != nil {
+		return "", err
+	}
+	// do this now so it won't be forgotten
+	defer resp.Body.Close()
+	// reads html as a slice of bytes
+	html, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return "", err
+	}
+
+	return string(html), nil
 }
