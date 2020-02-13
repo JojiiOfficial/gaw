@@ -191,6 +191,18 @@ func (str *String) Repeat(count int) {
 	*str = FromString(strings.Repeat(str.ToString(), count))
 }
 
+//Append appends text to the String str
+func (str *String) Append(s String) {
+	*str += s
+}
+
+//AppendIfNotEmpty appends s if str is not empty
+func (str *String) AppendIfNotEmpty(s String) {
+	if str.Length() > 0 {
+		str.Append(s)
+	}
+}
+
 //EscapeSpecialChars avoid sqlInjection
 func EscapeSpecialChars(inp string) string {
 	if len(inp) == 0 {
