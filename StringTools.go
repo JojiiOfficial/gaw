@@ -1,4 +1,4 @@
-package goawesomehelper
+package gaw
 
 import (
 	"html"
