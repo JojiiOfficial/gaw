@@ -2,7 +2,9 @@ package gaw
 
 import (
 	"html"
+	"math/rand"
 	"strings"
+	"time"
 )
 
 //String string
@@ -234,4 +236,15 @@ func IsInStringArray(str string, arr []string, args ...bool) bool {
 		}
 	}
 	return false
+}
+
+//RandString random string n lengh
+func RandString(n int) string {
+	rand.Seed(time.Now().UnixNano())
+	var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
+	b := make([]rune, n)
+	for i := range b {
+		b[i] = letterRunes[rand.Intn(len(letterRunes))]
+	}
+	return string(b)
 }
