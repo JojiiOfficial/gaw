@@ -1,7 +1,9 @@
 package gaw
 
 import (
+	"errors"
 	"io/ioutil"
+	"net"
 	"net/http"
 	"strings"
 )
@@ -20,6 +22,26 @@ var ReservedIPs = []string{
 	"198.18.0.0/15",
 	"224.0.0.0/4",
 	"240.0.0.0/4",
+}
+
+//IsIPReserved returns true if the given IP is a reserved ip
+func IsIPReserved(ip string) (bool, error) {
+	pip := net.ParseIP(ip)
+	if pip.To4() == nil {
+		return false, errors.New("No IPv4")
+	}
+
+	for _, reservedIP := range ReservedIPs {
+		_, subnet, err := net.ParseCIDR(reservedIP)
+		if err != nil {
+			return false, err
+		}
+		if subnet.Contains(pip) {
+			return true, nil
+		}
+	}
+
+	return false, nil
 }
 
 //GetIPFromHTTPrequest gets the real IP from the request
