@@ -2,9 +2,11 @@ package gaw
 
 import (
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"net"
 	"net/http"
+	"net/url"
 	"strings"
 )
 
@@ -42,6 +44,42 @@ func IsIPReserved(ip string) (bool, error) {
 	}
 
 	return false, nil
+}
+
+//IsReserved returns true if inp is reserved (if its a url a dns lookup will be made)
+func IsReserved(inp string) bool {
+	trial := net.ParseIP(inp)
+	if trial.To4() != nil {
+		isRes, err := IsIPReserved(inp)
+		if err != nil {
+			fmt.Println(err.Error())
+			return true
+		}
+		return isRes
+	}
+	host := inp
+
+	//Get hostname if it is an url
+	u, err := url.Parse(host)
+	if err == nil {
+		if len(u.Hostname()) > 0 {
+			host = u.Hostname()
+		}
+	}
+
+	//Lookup host
+	ips, err := net.LookupHost(host)
+	if err != nil {
+		panic(err)
+	}
+
+	for _, ip := range ips {
+		if IsReserved(ip) {
+			return true
+		}
+	}
+
+	return false
 }
 
 //GetIPFromHTTPrequest gets the real IP from the request
