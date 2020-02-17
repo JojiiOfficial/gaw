@@ -248,3 +248,24 @@ func RandString(n int) string {
 	}
 	return string(b)
 }
+
+//SHA512 hashes using sha512 algorithm
+func SHA512(text string) string {
+	algorithm := sha512.New()
+	algorithm.Write([]byte(text))
+	return hex.EncodeToString(algorithm.Sum(nil))
+}
+
+//SHA256 hashes using sha256 algorithm
+func SHA256(text string) string {
+	algorithm := sha256.New()
+	algorithm.Write([]byte(text))
+	return hex.EncodeToString(algorithm.Sum(nil))
+}
+
+//SHA1 hashes using sha1 algorithm
+func SHA1(text string) string {
+	algorithm := sha1.New()
+	algorithm.Write([]byte(text))
+	return hex.EncodeToString(algorithm.Sum(nil))
+}
