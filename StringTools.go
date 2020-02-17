@@ -1,14 +1,17 @@
 package gaw
 
 import (
+	"crypto/sha1"
+	"crypto/sha256"
+	"crypto/sha512"
+	"encoding/hex"
+	"encoding/json"
+	"fmt"
 	"html"
 	"math/rand"
+	"reflect"
 	"strings"
 	"time"
-	"crypto/sha512"
-	"crypto/sha256"
-	"crypto/sha1"
-	"encoding/hex"
 )
 
 //String string
@@ -272,4 +275,42 @@ func SHA1(text string) string {
 	algorithm := sha1.New()
 	algorithm.Write([]byte(text))
 	return hex.EncodeToString(algorithm.Sum(nil))
+}
+
+//JSONRemoveItems remove items from a json
+func JSONRemoveItems(js string, toRemove []string, caseSens bool) (string, error) {
+	var a map[string]interface{}
+	json.Unmarshal([]byte(js), &a)
+	start := time.Now()
+	b, err := json.Marshal(removeFromMap("", toRemove, a, caseSens))
+	fmt.Println(time.Now().Sub(start).String())
+	return string(b), err
+}
+
+func removeFromMap(name string, remItems []string, inp map[string]interface{}, caseSens bool) map[string]interface{} {
+	curMap := make(map[string]interface{})
+
+a:
+	for key, v := range inp {
+		fullName := name + key
+
+		for _, remItem := range remItems {
+			if caseSens {
+				if strings.ToLower(remItem) == strings.ToLower(fullName) {
+					continue a
+				}
+			} else {
+				if remItem == fullName {
+					continue a
+				}
+			}
+		}
+
+		if reflect.ValueOf(v).Kind() == reflect.Map {
+			curMap[key] = removeFromMap(fullName+".", remItems, (v).(map[string]interface{}), caseSens)
+		} else {
+			curMap[key] = v
+		}
+	}
+	return curMap
 }
