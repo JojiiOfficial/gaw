@@ -6,7 +6,6 @@ import (
 	"crypto/sha512"
 	"encoding/hex"
 	"encoding/json"
-	"fmt"
 	"html"
 	"math/rand"
 	"reflect"
@@ -278,13 +277,18 @@ func SHA1(text string) string {
 }
 
 //JSONRemoveItems remove items from a json
-func JSONRemoveItems(js string, toRemove []string, caseSens bool) (string, error) {
+func JSONRemoveItems(js []byte, toRemove []string, caseSens bool) ([]byte, error) {
+	if len(toRemove) == 0 {
+		return js, nil
+	}
+	if string(js) == "{}" {
+		return js, nil
+	}
+
 	var a map[string]interface{}
-	json.Unmarshal([]byte(js), &a)
-	start := time.Now()
-	b, err := json.Marshal(removeFromMap("", toRemove, a, caseSens))
-	fmt.Println(time.Now().Sub(start).String())
-	return string(b), err
+	json.Unmarshal(js, &a)
+
+	return json.Marshal(removeFromMap("", toRemove, a, caseSens))
 }
 
 func removeFromMap(name string, remItems []string, inp map[string]interface{}, caseSens bool) map[string]interface{} {
