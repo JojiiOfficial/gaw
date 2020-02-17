@@ -5,6 +5,10 @@ import (
 	"math/rand"
 	"strings"
 	"time"
+	"crypto/sha512"
+	"crypto/sha256"
+	"crypto/sha1"
+	"encoding/hex"
 )
 
 //String string
