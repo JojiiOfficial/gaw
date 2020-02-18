@@ -47,15 +47,15 @@ func IsIPReserved(ip string) (bool, error) {
 }
 
 //IsReserved returns true if inp is reserved (if its a url a dns lookup will be made)
-func IsReserved(inp string) bool {
+func IsReserved(inp string) (bool, error) {
 	trial := net.ParseIP(inp)
 	if trial.To4() != nil {
 		isRes, err := IsIPReserved(inp)
 		if err != nil {
 			fmt.Println(err.Error())
-			return true
+			return false, err
 		}
-		return isRes
+		return isRes, nil
 	}
 	host := inp
 
@@ -70,16 +70,21 @@ func IsReserved(inp string) bool {
 	//Lookup host
 	ips, err := net.LookupHost(host)
 	if err != nil {
-		panic(err)
+		return false, err
 	}
 
 	for _, ip := range ips {
-		if IsReserved(ip) {
-			return true
+		is, err := IsReserved(ip)
+		if err != nil {
+			return false, err
+		}
+
+		if is {
+			return true, nil
 		}
 	}
 
-	return false
+	return false, nil
 }
 
 //GetIPFromHTTPrequest gets the real IP from the request
