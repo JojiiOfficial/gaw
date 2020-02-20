@@ -129,3 +129,14 @@ func GetHTMLFromURL(url string) (string, error) {
 
 	return string(html), nil
 }
+
+//IPtoInt converts an IP to an integer
+func IPtoInt(sIP string) uint {
+	ip := net.ParseIP(sIP)
+	return uint(ip[12])*16777216 + uint(ip[13])*65536 + uint(ip[14])*256 + uint(ip[15])
+}
+
+//IntToIP converts an integer to an IP
+func IntToIP(ip uint) net.IP {
+	return net.IPv4(byte((ip>>24)&0xFF), byte((ip>>16)&0xFF), byte((ip>>8)&0xFF), byte(ip&0xFF))
+}
