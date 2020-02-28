@@ -108,7 +108,8 @@ func GetIPFromHTTPrequest(r *http.Request) string {
 	return repIP
 }
 
-func inPortValid(port int) bool {
+//IsPortValid returns true if the given TCP port is valid
+func IsPortValid(port int) bool {
 	return port > 0 && port < 65535
 }
 
