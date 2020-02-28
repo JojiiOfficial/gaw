@@ -254,6 +254,17 @@ func RandString(n int) string {
 	return string(b)
 }
 
+//HasEmptyString returns true if one of the given strings is empty
+func HasEmptyString(s ...string) bool {
+	for _, str := range s {
+		if len(strings.TrimSpace(str)) == 0 {
+			return true
+		}
+	}
+
+	return false
+}
+
 //SHA512 hashes using sha512 algorithm
 func SHA512(text string) string {
 	algorithm := sha512.New()
