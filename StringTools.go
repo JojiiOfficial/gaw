@@ -1,6 +1,7 @@
 package gaw
 
 import (
+	"crypto/md5"
 	"crypto/sha1"
 	"crypto/sha256"
 	"crypto/sha512"
@@ -284,6 +285,12 @@ func SHA1(text string) string {
 	algorithm := sha1.New()
 	algorithm.Write([]byte(text))
 	return hex.EncodeToString(algorithm.Sum(nil))
+}
+
+//GetMD5Hash return hash of input
+func GetMD5Hash(text string) string {
+	hash := md5.Sum([]byte(text))
+	return hex.EncodeToString(hash[:])
 }
 
 //JSONRemoveItems remove items from a json

@@ -3,6 +3,7 @@ package gaw
 import (
 	"bufio"
 	"fmt"
+	"io"
 	"strings"
 )
 
@@ -36,4 +37,27 @@ func WaitForMessage(question string, reader *bufio.Reader) (int, string) {
 		return 1, text
 	}
 	return 0, text
+}
+
+//BufferedCopy copies stream buffered. Buffersize in bytes
+func BufferedCopy(bufferSize int, writer io.Writer, reader io.Reader) (err error) {
+	buf := make([]byte, bufferSize)
+	var n int
+
+	for {
+		n, err = reader.Read(buf)
+		if err != nil && err != io.EOF {
+			return err
+		}
+
+		if n == 0 {
+			break
+		}
+
+		if _, err = writer.Write(buf[:n]); err != nil {
+			return err
+		}
+	}
+
+	return
 }
