@@ -223,6 +223,16 @@ func EscapeSpecialChars(inp string) string {
 	return html.EscapeString(inp)
 }
 
+//IsInStringArrayContains returns true if the array contains the given key
+func IsInStringArrayContains(str string, arr []string) bool {
+	for _, s := range arr {
+		if strings.Contains(str, s) {
+			return true
+		}
+	}
+	return false
+}
+
 //IsInStringArray returns true if the array contains the given key
 func IsInStringArray(str string, arr []string, args ...bool) bool {
 	var trim bool
