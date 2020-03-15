@@ -20,3 +20,9 @@ func CreatePath(file string, mode os.FileMode) error {
 	dir, _ := filepath.Split(file)
 	return os.MkdirAll(dir, mode)
 }
+
+// FileFromPath returns file from given path
+func FileFromPath(path string) string {
+	_, file := filepath.Split(path)
+	return file
+}
