@@ -1,6 +1,9 @@
 package gaw
 
-import "os"
+import (
+	"os"
+	"path/filepath"
+)
 
 //FileExists reports whether the named file or directory exists.
 func FileExists(name string) bool {
@@ -10,4 +13,10 @@ func FileExists(name string) bool {
 		}
 	}
 	return true
+}
+
+// CreatePath creates all directories for a file
+func CreatePath(file string, mode os.FileMode) error {
+	dir, _ := filepath.Split(file)
+	return os.MkdirAll(dir, mode)
 }
