@@ -26,3 +26,9 @@ func FileFromPath(path string) string {
 	_, file := filepath.Split(path)
 	return file
 }
+
+// PathFromFilepath returns a path from a filepath
+func PathFromFilepath(fp string) string {
+	path, _ := filepath.Split(fp)
+	return path
+}
