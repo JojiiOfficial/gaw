@@ -345,3 +345,15 @@ a:
 	}
 	return curMap
 }
+
+// TrimEmptySlice removes all empty items in slice sl. Order of items does'n change.
+func TrimEmptySlice(sl []string) []string {
+	j := 0
+	for i := range sl {
+		if sl[i] != "" {
+			sl[j] = sl[i]
+			j++
+		}
+	}
+	return sl[:j]
+}
