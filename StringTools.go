@@ -2,13 +2,15 @@ package gaw
 
 import (
 	"crypto/md5"
+	crand "crypto/rand"
 	"crypto/sha1"
 	"crypto/sha256"
 	"crypto/sha512"
+	mrand "math/rand"
+
 	"encoding/hex"
 	"encoding/json"
 	"html"
-	"math/rand"
 	"reflect"
 	"strings"
 )
@@ -254,15 +256,39 @@ func IsInStringArray(str string, arr []string, args ...bool) bool {
 	return false
 }
 
-const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+const (
+	lettersWithSpecial = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!@#$%^&*(){}[]_/+=?|-\\<>"
+	letters            = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+)
 
 //RandString random string n length
 func RandString(n int) string {
 	b := make([]byte, n)
 	for i := range b {
-		b[i] = letterBytes[rand.Intn(len(letterBytes))]
+		b[i] = letters[mrand.Intn(len(letters))]
 	}
 	return string(b)
+}
+
+// GenRandString generate random string using crypto/rand
+func GenRandString(n int, noSpecial ...bool) (string, error) {
+	if len(noSpecial) > 0 && noSpecial[0] {
+		return GenRandStringWithSet(n, letters)
+	}
+	return GenRandStringWithSet(n, lettersWithSpecial)
+}
+
+// GenRandStringWithSet generate random string using crypto/rand
+func GenRandStringWithSet(n int, useLetters string) (string, error) {
+	bytes := make([]byte, n)
+	_, err := crand.Read(bytes)
+	if err != nil {
+		return "", err
+	}
+	for i, b := range bytes {
+		bytes[i] = useLetters[b%byte(len(useLetters))]
+	}
+	return string(bytes), nil
 }
 
 //HasEmptyString returns true if one of the given strings is empty
