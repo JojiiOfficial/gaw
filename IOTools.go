@@ -29,7 +29,11 @@ func Contains(a []string, x string) bool {
 func WaitForMessage(question string, reader *bufio.Reader) (int, string) {
 	fmt.Print(question)
 	text, _ := reader.ReadString('\n')
+	// I HATE WINDOWS
 	text = strings.ReplaceAll(text, "\n", "")
+	text = strings.ReplaceAll(text, "\r", "")
+	text = strings.ReplaceAll(text, "\r\n", "")
+	text = strings.ReplaceAll(text, "\n\r", "")
 	if strings.ToLower(text) == "a" {
 		return -1, ""
 	}
