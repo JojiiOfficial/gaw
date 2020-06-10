@@ -78,3 +78,15 @@ func ListDir(dir string, filesOnly bool) ([]string, error) {
 
 	return files, err
 }
+
+// GetDirSize get size of all files in a directory
+func GetDirSize(dir string) (int64, error) {
+	var size int64
+
+	err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
+		size += info.Size()
+		return nil
+	})
+
+	return size, err
+}
