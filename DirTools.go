@@ -62,3 +62,15 @@ func DirAbs(scriptPath string) (string, bool) {
 
 	return filepath.Join(GetCurrentDir(), scriptPath), true
 }
+
+// ListDir get all files in a directory
+func ListDir(dir string) ([]string, error) {
+	var files []string
+
+	err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
+		files = append(files, path)
+		return nil
+	})
+
+	return files, err
+}
