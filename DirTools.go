@@ -64,10 +64,14 @@ func DirAbs(scriptPath string) (string, bool) {
 }
 
 // ListDir get all files in a directory
-func ListDir(dir string) ([]string, error) {
+func ListDir(dir string, filesOnly bool) ([]string, error) {
 	var files []string
 
 	err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
+		if filesOnly && info.IsDir() {
+			return nil
+		}
+
 		files = append(files, path)
 		return nil
 	})
