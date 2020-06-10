@@ -3,7 +3,7 @@ package gaw
 import (
 	"log"
 	"os"
-	"path"
+	"path/filepath"
 	"strings"
 )
 
@@ -27,7 +27,22 @@ func GetHome() string {
 	return home
 }
 
-//DirAbs returns the absolute path from human input (./ or ~/) and if it exists
+// ResolveFullPath resolve path
+func ResolveFullPath(fPath string) string {
+	fPath = filepath.Clean(fPath)
+
+	if strings.HasPrefix(fPath, "~/") {
+		fPath = filepath.Join(GetHome(), fPath[2:])
+	}
+
+	if strings.HasPrefix(fPath, "./") {
+		fPath = filepath.Join(GetCurrentDir(), fPath[2:])
+	}
+
+	return fPath
+}
+
+// DirAbs returns the absolute path from human input (./ or ~/) and if it exists
 func DirAbs(scriptPath string) (string, bool) {
 	s, err := os.Stat(scriptPath)
 	if err != nil || s == nil || !s.IsDir() {
@@ -38,12 +53,12 @@ func DirAbs(scriptPath string) (string, bool) {
 	}
 
 	if strings.HasPrefix(scriptPath, "./") {
-		return path.Join(GetCurrentDir(), scriptPath[2:]), true
+		return filepath.Join(GetCurrentDir(), scriptPath[2:]), true
 	}
 
 	if strings.HasPrefix(scriptPath, "~/") {
-		return path.Join(GetHome(), scriptPath[2:]), true
+		return filepath.Join(GetHome(), scriptPath[2:]), true
 	}
 
-	return path.Join(GetCurrentDir(), scriptPath), true
+	return filepath.Join(GetCurrentDir(), scriptPath), true
 }
