@@ -1,6 +1,9 @@
 package gaw
 
 import (
+	"crypto/md5"
+	"encoding/hex"
+	"io"
 	"os"
 	"path/filepath"
 )
@@ -31,4 +34,25 @@ func FileFromPath(path string) string {
 func PathFromFilepath(fp string) string {
 	path, _ := filepath.Split(fp)
 	return path
+}
+
+// GetFileMD5 get md5 hash of file
+func GetFileMD5(filePath string) (string, error) {
+	// Open file
+	file, err := os.Open(filePath)
+	if err != nil {
+		return "", err
+	}
+	defer file.Close()
+
+	buff := make([]byte, 1024*10)
+	hash := md5.New()
+
+	// Copy file into hash
+	if _, err := io.CopyBuffer(hash, file, buff); err != nil {
+		return "", err
+	}
+
+	// Get Sum and encode it to a readable hex string
+	return hex.EncodeToString(hash.Sum(nil)[:16]), nil
 }
