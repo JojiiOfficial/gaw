@@ -31,12 +31,12 @@ func GetHome() string {
 func ResolveFullPath(fPath string) string {
 	fPath = filepath.Clean(fPath)
 
-	if strings.HasPrefix(fPath, "~/") {
-		fPath = filepath.Join(GetHome(), fPath[2:])
+	if strings.HasPrefix(fPath, "~") {
+		fPath = filepath.Join(GetHome(), fPath[1:])
 	}
 
-	if strings.HasPrefix(fPath, "./") {
-		fPath = filepath.Join(GetCurrentDir(), fPath[2:])
+	if strings.HasPrefix(fPath, ".") {
+		fPath = filepath.Join(GetCurrentDir(), fPath[1:])
 	}
 
 	return fPath
